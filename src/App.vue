@@ -6,11 +6,22 @@
     data (){
       return {
         canvas: null,
-        url: ''
+        url: '',
+        productTitle: null,
+        productDescription: null
       }
     },
     methods: {
       toImage(){
+        console.log(this.productTitle)
+        this.productTitle.set({
+          text: '自定义标题'
+        })
+        this.productDescription.set({
+          text: '自定义描述'
+        })
+        // this.productDescription.setText('自定义描述')
+        this.canvas.renderAll()
         this.url = this.canvas.toDataURL();
       }
     },
@@ -41,7 +52,7 @@
         product.selectable =false
         this.canvas.add(product);
       });
-      var productTitle = new fabric.Text('高质量运动T恤', {
+      this.productTitle = new fabric.Text('高质量运动T恤', {
         fontSize: 30,
         fontFamily: 'Arial',
         fill: '#fff',
@@ -50,8 +61,8 @@
         zIndex: 999,
         selectable: false
       });
-      this.canvas.add(productTitle);
-      var productDescription = new fabric.Text('采用优质面料,舒适透气,耐穿耐洗。', {
+      this.canvas.add(this.productTitle);
+      this.productDescription = new fabric.Text('采用优质面料,舒适透气,耐穿耐洗。', {
         fontSize: 14,
         fontFamily: 'Arial',
         fill: 'red',
@@ -60,9 +71,9 @@
         zIndex: 999,
         selectable: false
       });
-      this.canvas.add(productDescription);
-      this.canvas.bringToFront(productTitle);
-      this.canvas.bringToFront(productDescription);
+      this.canvas.add(this.productDescription);
+      this.canvas.bringToFront(this.productTitle);
+      this.canvas.bringToFront(this.productDescription);
     }
   }
 
