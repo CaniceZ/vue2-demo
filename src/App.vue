@@ -1,37 +1,49 @@
 <script>
   import  { fabric } from 'fabric'
-  const Image = new URL('./assets/xxxxx.png', import.meta.url).href
-  const qrcode = new URL('./assets/logo.svg', import.meta.url).href
+  const Image2 = new URL('./assets/xxxxx.png', import.meta.url).href
+import QRCode from 'qrcode';
+ 
+
   export default {
     data (){
       return {
         canvas: null,
         url: '',
         productTitle: null,
-        productDescription: null
+        productDescription: null,
       }
     },
     methods: {
-      toImage(){
-        console.log(this.productTitle)
+      async toImage(){
         this.productTitle.set({
           text: '自定义标题'
         })
         this.productDescription.set({
           text: '自定义描述'
         })
-        // this.productDescription.setText('自定义描述')
-        this.canvas.renderAll()
-        this.url = this.canvas.toDataURL();
+        // 设置二维码
+        const opts = { errorCorrectionLevel: 'H'};
+        const qrUrl = await QRCode.toDataURL('http://www.baidu.com', opts);
+        console.log(qrUrl)
+        fabric.Image.fromURL(qrUrl, (product)=> {
+          product.scaleToWidth(145);
+          product.scaleToHeight(145);
+          product.left = 85;
+          product.top = 185;
+          product.selectable =false
+          this.canvas.add(product);
+          this.canvas.renderAll()
+          this.url = this.canvas.toDataURL();
+        });
       }
     },
-    mounted(){
+    async mounted(){
       this.canvas = new fabric.Canvas('my-canvas', {
         width: 300,
         height: 518,
         selection: false
       })
-      fabric.Image.fromURL(Image, (bg)=>{
+      fabric.Image.fromURL(Image2, (bg)=>{
         bg.scaleToWidth(300);
         bg.scaleToHeight(518);
         // canvas.add(bg);
@@ -44,14 +56,18 @@
       );
         
       });
-      fabric.Image.fromURL(qrcode, (product)=> {
-        product.scaleToWidth(145);
-        product.scaleToHeight(145);
-        product.left = 60;
-        product.top = 195;
-        product.selectable =false
-        this.canvas.add(product);
-      });
+      // 设置二维码图片
+      // const opts = { errorCorrectionLevel: 'H'};
+      // const qrUrl = await QRCode.toDataURL('https://developers.weixin.qq.com/miniprogram/dev/framework/', opts);
+      // console.log(qrUrl)
+      // fabric.Image.fromURL(qrUrl, (product)=> {
+      //   product.scaleToWidth(145);
+      //   product.scaleToHeight(145);
+      //   product.left = 85;
+      //   product.top = 185;
+      //   product.selectable =false
+      //   this.canvas.add(product);
+      // });
       this.productTitle = new fabric.Text('高质量运动T恤', {
         fontSize: 30,
         fontFamily: 'Arial',
